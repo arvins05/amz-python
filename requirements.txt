@@ -9,7 +9,9 @@ idna==3.7
 ijson==3.3.0
 mypy-extensions==1.0.0
 packaging==24.1
+numpy==1.23.5
 pandas==2.1.1
+pandas-gbq==0.17.1
 pathspec==0.12.1
 platformdirs==4.2.2
 pydantic==2.8.2
@@ -20,3 +22,4 @@ PyYAML==6.0.1
 requests==2.32.3
 typing_extensions==4.12.2
 urllib3==2.2.2
+pytz==2023.3
