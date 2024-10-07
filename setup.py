@@ -16,7 +16,7 @@ setup(
             'mypy-extensions==1.0.0',
             'numpy>=1.24.0',
             'packaging==24.1',
-            'pandas==2.1.1',
+            'pandas==2.2.2',
             'pandas-gbq==0.17.1',
             'pathspec==0.12.1',
             'platformdirs==4.2.2',
@@ -29,6 +29,6 @@ setup(
             'typing_extensions==4.12.2',
             'urllib3==2.2.2',
             'pytz==2023.3',
-            'pyarrow<7.0dev,>=3.0.0',
+            'pyarrow==6.0.1',
     ],
 )
