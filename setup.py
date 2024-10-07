@@ -14,7 +14,7 @@ setup(
             'idna==3.7',
             'ijson==3.3.0',
             'mypy-extensions==1.0.0',
-            'numpy==1.23.5',
+            'numpy>=1.24.0',
             'packaging==24.1',
             'pandas==2.1.1',
             'pandas-gbq==0.17.1',
@@ -29,5 +29,6 @@ setup(
             'typing_extensions==4.12.2',
             'urllib3==2.2.2',
             'pytz==2023.3',
+            'pyarrow>=10.0.1',
     ],
 )
