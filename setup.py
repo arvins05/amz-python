@@ -29,6 +29,5 @@ setup(
             'typing_extensions==4.12.2',
             'urllib3==2.2.2',
             'pytz==2023.3',
-            'pyarrow>=10.0.1',
     ],
 )
