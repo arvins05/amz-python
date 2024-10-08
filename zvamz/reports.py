@@ -27,6 +27,7 @@ def bgdeldup(dateName:str, minDate: datetime, client: str, bgTable:str):
 
     return delData
 
+
 def bgdeldupf(dateName:str, minDate: datetime, client: str, bgTable:str):
     """
     Delete the data from the declared minDate to avoid duplicate in the database
@@ -96,7 +97,8 @@ def lowfeereport(filePath:str):
     - filePath: the path where the report is saved
 
     Returns:
-    - DataFrame of the cleaned report 
+    - DataFrame of the cleaned report
+    - Flase if there is no data related to low level inventory fee
     """
     lowFeeDf = pd.read_csv(filePath)
 
@@ -119,19 +121,21 @@ def lowfeereport(filePath:str):
             'Low-inventory-level fee total'
         ]]
 
-    lowFeeDf = lowFeeDf.rename(columns=lambda x:x.replace('-','_').replace(' ','_').lower())
-    lowFeeDf['start_date'] = pd.to_datetime(lowFeeDf['start_date'])
-    lowFeeDf['end_date'] = pd.to_datetime(lowFeeDf['end_date'])
+        lowFeeDf = lowFeeDf.rename(columns=lambda x:x.replace('-','_').replace(' ','_').lower())
+        lowFeeDf['start_date'] = pd.to_datetime(lowFeeDf['start_date'])
+        lowFeeDf['end_date'] = pd.to_datetime(lowFeeDf['end_date'])
 
-    schema = {
-            'start_date': 'datetime64[ns]',
-            'end_date': 'datetime64[ns]',
-            'asin': str,
-            'msku': str,
-            'low_inventory_level_fee_per_unit': float,
-            'low_inventory_level_fee_quantity': float,
-            'low_inventory_level_fee_total': float
-    }
+        schema = {
+                'start_date': 'datetime64[ns]',
+                'end_date': 'datetime64[ns]',
+                'asin': str,
+                'msku': str,
+                'low_inventory_level_fee_per_unit': float,
+                'low_inventory_level_fee_quantity': float,
+                'low_inventory_level_fee_total': float
+        }
 
-    lowFeeDf = lowFeeDf.astype(schema)
-    return lowFeeDf
+        lowFeeDf = lowFeeDf.astype(schema)
+        return lowFeeDf
+    else:
+        return False
