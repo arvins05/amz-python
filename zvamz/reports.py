@@ -1,5 +1,32 @@
+#Check current df and existing BigQuery table has the same columns
+def dfbgcolcheck(df, client, bgTable):
+    # df is the dataframe you want to compare
+    # client is your BigQuery Client
+    # bgTable is the BigQuery Table address
+    existingDataQuery = f"""
+    SELECT
+    *
+    FROM
+    `{bgTable}`
+    LIMIT 10
+    """
+
+    existingData = client.query(existingDataQuery).to_dataframe()
+
+    columnsCheck = existingData.columns.equals(df.columns)
+
+    # Returns True if the column are the same and error if not
+    if columnsCheck:
+        print("Column names and positions are the same.")
+        return True
+    else:
+        raise ValueError("Error: Column names and positions are not the same.")
+
+
 #low inventory level fee processing using downloaded report
-def lowfeereport(filePath,):
+def lowfeereport(filePath):
+    # filePath is the path where the economics report from amazon seller central is located
+
     import pandas as pd
     lowFeeDf = pd.read_csv(filePath)
 
@@ -38,4 +65,5 @@ def lowfeereport(filePath,):
 
     lowFeeDf = lowFeeDf.astype(schema)
 
+    # Return the cleanned up dataframe for low level inventory fee
     return lowFeeDf
