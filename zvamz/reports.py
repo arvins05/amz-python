@@ -1,8 +1,74 @@
-#Check current df and existing BigQuery table has the same columns
-def dfbgcolcheck(df, client, bgTable):
-    # df is the dataframe you want to compare
-    # client is your BigQuery Client
-    # bgTable is the BigQuery Table address
+import pandas as pd
+from datetime import datetime
+
+
+def bgdeldup(dateName:str, minDate: datetime, client: str, bgTable:str):
+    """
+    Delete the data from the declared minDate to avoid duplicate in the database
+
+    Parameters:
+    - dateName: the name of the date column
+    - minDate: the start date that will be deleted to avoid duplicate
+    - client: the BigQuery client name
+    - bgTable: the BigQuery Table address
+
+    Returns:
+    - delete the data to avoid duplicate
+    """
+    delDataQuery = f"""
+    DELETE FROM
+    `{bgTable}`
+    WHERE
+    {dateName} >= '{minDate}'
+    """
+
+    delData = client.query(delDataQuery)
+    delData = delData.result()
+
+    return delData
+
+def bgdeldupf(dateName:str, minDate: datetime, client: str, bgTable:str):
+    """
+    Delete the data from the declared minDate to avoid duplicate in the database
+    (free version of BigQuery)
+
+    Parameters:
+    - dateName: the name of the date column
+    - minDate: the start date that will be deleted to avoid duplicate
+    - client: the BigQuery client name
+    - bgTable: the BigQuery Table address
+
+    Returns:
+    - delete the data to avoid duplicate
+    """
+    delDataQuery = f"""
+    CREATE OR REPLACE TABLE `{bgTable}` AS
+
+    SELECT *
+    FROM `{bgTable}`
+    WHERE
+    {dateName} < '{minDate}'
+    """
+
+    delData = client.query(delDataQuery)
+    delData = delData.result()
+
+    return delData
+
+
+def dfbgcolcheck(df: pd.DataFrame, client: str, bgTable: str):
+    """
+    This function compares the columns of DataFrame and existing BigQuery Table
+
+    Paremeters:
+    - df: Data frame to check
+    - client: name of BigQuery client
+    - bgTable: the address of BigQuery Table
+
+    Returns:
+    - True if it matches
+    - ValueError if not
+    """
     existingDataQuery = f"""
     SELECT
     *
@@ -14,8 +80,6 @@ def dfbgcolcheck(df, client, bgTable):
     existingData = client.query(existingDataQuery).to_dataframe()
 
     columnsCheck = existingData.columns.equals(df.columns)
-
-    # Returns True if the column are the same and error if not
     if columnsCheck:
         print("Column names and positions are the same.")
         return True
@@ -23,11 +87,17 @@ def dfbgcolcheck(df, client, bgTable):
         raise ValueError("Error: Column names and positions are not the same.")
 
 
-#low inventory level fee processing using downloaded report
-def lowfeereport(filePath):
-    # filePath is the path where the economics report from amazon seller central is located
+def lowfeereport(filePath:str):
+    """
+    This function process and clean the Amazon Economics Report.
+    It extracts the low level inventory data
 
-    import pandas as pd
+    Paremeters:
+    - filePath: the path where the report is saved
+
+    Returns:
+    - DataFrame of the cleaned report 
+    """
     lowFeeDf = pd.read_csv(filePath)
 
     checkCol = [
@@ -64,6 +134,4 @@ def lowfeereport(filePath):
     }
 
     lowFeeDf = lowFeeDf.astype(schema)
-
-    # Return the cleanned up dataframe for low level inventory fee
     return lowFeeDf
