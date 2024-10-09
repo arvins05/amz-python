@@ -1,5 +1,5 @@
 import requests
-from ratelimit import RateLimiter
+from .ratelimit import RateLimiter
 
 def zv_client_access(username, region):
     """
