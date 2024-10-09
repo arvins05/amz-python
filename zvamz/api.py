@@ -1,6 +1,11 @@
 import requests
+from ratelimit import RateLimiter
 
 def zv_client_access(username, region):
+    """
+    This is authentication process for amazon.
+    Only works for ZV Data Automation Clients
+    """
     url = "https://zvdataautomation.com//zvapiauth/"
     payload = {"username": username, "region": region}
     response = requests.post(url, json=payload)
@@ -11,3 +16,4 @@ def zv_client_access(username, region):
         return access_token
     else:
         return ValueError('Error: Not Authenticated')
+    
