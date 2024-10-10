@@ -102,6 +102,6 @@ def shipment_status(markeplace_action, access_token, past_days):
         })
 
     df = pd.DataFrame(shipments)
-    df_final = df.insert(0,'country',df['destination_fulfillment_center'].map(fc_to_country))
+    df['country'] = df['destination_fulfillment_center'].map(fc_to_country)
 
-    return df_final
+    return df
