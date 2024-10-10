@@ -2,6 +2,7 @@ import requests
 from .ratelimit import RateLimiter
 from datetime import datetime, timedelta
 import pandas as pd
+from .fcmap import fc_to_country
 
 def zv_client_access(username, region):
     """
@@ -101,4 +102,6 @@ def shipment_status(markeplace_action, access_token, past_days):
         })
 
     df = pd.DataFrame(shipments)
-    return df
+    df_final = df.insert(0,'country',df['destination_fulfillment_center'.map(fc_to_country)])
+
+    return df_final
