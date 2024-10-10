@@ -56,7 +56,7 @@ def shipment_status(markeplace_action, access_token, past_days):
     for ShipmentStatusList in ShipmentStatusLists:
         request_params = {
             'MarketplaceId': MarketplaceId,
-            'QueryType': 'SHIPMENT',
+            'QueryType': 'DATE_RANGE',
             'ShipmentStatusList': ShipmentStatusList,
             'LastUpdatedAfter': LastUpdatedAfter,
             'LastUpdatedBefore': LastUpdatedBefore,
