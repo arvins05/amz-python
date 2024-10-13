@@ -195,5 +195,5 @@ def shipment_items(marketplace_action, access_token, past_days):
                 'prep_instruction': np.nan,
                 'prep_owner': np.nan
             })
-
-    return df 
+    shipmentItemsDf = pd.DataFrame(df)
+    return shipmentItemsDf 
