@@ -1,7 +1,8 @@
 import requests
-from .ratelimit import RateLimiter
-from datetime import datetime, timedelta
 import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta
+from .ratelimit import RateLimiter
 from .fcmap import fc_to_country
 
 def zv_client_access(username, region):
@@ -154,6 +155,7 @@ def shipment_items(marketplace_action, access_token, past_days):
         while NextToken:
             request_params_next = {
                 'MarketplaceId': marketplace_id,
+                'QueryType': 'NEXT_TOKEN',
                 'NextToken': NextToken
             }
             response = rate_limiter.send_request(requests.get, url, headers=headers, params=request_params_next)
