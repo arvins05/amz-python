@@ -139,3 +139,33 @@ def lowfeereport(filePath:str):
         return lowFeeDf
     else:
         return False
+    
+
+def promoreport(filePath:str):
+    """
+    Clean the raw file downloaded in Amazon Seller Central Promotions Report
+
+    Parameter:
+    - filePath: the path where the downloaded Promotions Report is located
+
+    Return:
+    - DataFrame of the cleaned report
+    """
+    promoDf = pd.read_csv(filePath)
+    promoDf = promoDf.rename(columns=lambda x:x.replace('?','').replace('"','').replace('-','_').lower())
+    promoDf['shipment_date'] = pd.to_datetime(promoDf['shipment_date'], utc=True)
+
+    schema = {
+        'shipment_date': 'datetime64[ns, UTC]',
+        'currency': str,
+        'item_promotion_discount': float,
+        'item_promotion_id': str,
+        'description': str,
+        'promotion_rule_value': str,
+        'amazon_order_id': str,
+        'shipment_id': str,
+        'shipment_item_id': str
+    }
+    promoDf = promoDf.astype(schema)
+
+    return promoDf
