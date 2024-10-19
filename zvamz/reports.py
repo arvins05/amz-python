@@ -224,7 +224,7 @@ def sbstreport(filePath:str):
         'clickthru_rate_ctr': float,
         'spend': float,
         'cost_per_click_cpc': float,
-        'cost_per_1,000_viewable_impressions_vcpm': float,
+        'cost_per_1000_viewable_impressions_vcpm': float,
         'total_advertising_cost_of_sales_acos_': float,
         'total_return_on_advertising_spend_roas': float,
         '_14_day_total_sales_': float,
