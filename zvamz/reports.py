@@ -169,3 +169,38 @@ def promoreport(filePath:str):
     promoDf = promoDf.astype(schema)
 
     return promoDf
+
+def spstreport(filePath:str):
+    spSearchTermDf = pd.read_excel(filePath)
+    spSearchTermDf = spSearchTermDf.rename(columns=lambda X:X.replace('7','_7').replace('-','').replace('#','').replace('(','').replace(')','').replace(' ','_').lower())
+
+    schema = {
+        'date': 'datetime64[ns]',
+        'portfolio_name': str,
+        'currency': str,
+        'campaign_name': str,
+        'ad_group_name': str,
+        'targeting': str,
+        'match_type': str,
+        'customer_search_term': str,
+        'impressions': float,
+        'clicks': float,
+        'clickthru_rate_ctr': float,
+        'cost_per_click_cpc': float,
+        'spend': float,
+        '_7_day_total_sales_': float,
+        'total_advertising_cost_of_sales_acos_': float,
+        'total_return_on_advertising_spend_roas': float,
+        '_7_day_total_orders_': float,
+        '_7_day_total_units_': float,
+        '_7_day_conversion_rate': float,
+        '_7_day_advertised_sku_units_': float,
+        '_7_day_other_sku_units_': float,
+        '_7_day_advertised_sku_sales_': float,
+        '_7_day_other_sku_sales_': float
+    }
+
+    spSearchTermDf = spSearchTermDf.astype(schema)
+
+    return spSearchTermDf
+

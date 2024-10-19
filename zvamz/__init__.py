@@ -3,6 +3,7 @@ from .reports import dfbgcolcheck
 from .reports import bgdeldup
 from .reports import bgdeldupf
 from .reports import promoreport
+from .reports import spstreport
 
 from .ratelimit import RateLimiter
 
