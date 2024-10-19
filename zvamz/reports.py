@@ -204,3 +204,41 @@ def spstreport(filePath:str):
 
     return spSearchTermDf
 
+def sbstreport(filePath:str):
+    sbSearchTermDf = pd.read_excel(filePath)
+    sbSearchTermDf = sbSearchTermDf.rename(columns=lambda X:X.replace('14','_14').replace('-','').replace('#','').replace('(','').replace(')','').replace(' ','_').lower())
+
+    schema = {
+        'date': 'datetime64[ns]',
+        'portfolio_name': str,
+        'currency': str,
+        'campaign_name': str,
+        'ad_group_name': str,
+        'targeting': str,
+        'match_type': str,
+        'customer_search_term': str,
+        'cost_type': str,
+        'impressions': float,
+        'viewable_impressions': float,
+        'clicks': float,
+        'clickthru_rate_ctr': float,
+        'spend': float,
+        'cost_per_click_cpc': float,
+        'cost_per_1,000_viewable_impressions_vcpm': float,
+        'total_advertising_cost_of_sales_acos_': float,
+        'total_return_on_advertising_spend_roas': float,
+        '_14_day_total_sales_': float,
+        '_14_day_total_orders_': float,
+        '_14_day_total_units_': float,
+        '_14_day_conversion_rate': float,
+        'total_advertising_cost_of_sales_acos__click': float,
+        'total_return_on_advertising_spend_roas__click': float,
+        '_14_day_total_sales__click': float,
+        '_14_day_total_orders___click': float,
+        '_14_day_total_units___click': float
+    }
+
+    sbSearchTermDf = sbSearchTermDf.astype(schema)
+
+    return sbSearchTermDf
+
