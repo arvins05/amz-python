@@ -206,7 +206,7 @@ def spstreport(filePath:str):
 
 def sbstreport(filePath:str):
     sbSearchTermDf = pd.read_excel(filePath)
-    sbSearchTermDf = sbSearchTermDf.rename(columns=lambda X:X.replace('14','_14').replace('-','').replace('#','').replace('(','').replace(')','').replace(' ','_').lower())
+    sbSearchTermDf = sbSearchTermDf.rename(columns=lambda X:X.replace('14','_14').replace('-','').replace('#','').replace('(','').replace(')','').replace(',','').replace(' ','_').lower())
 
     schema = {
         'date': 'datetime64[ns]',
