@@ -5,6 +5,7 @@ from .reports import bgdeldupf
 from .reports import promoreport
 from .reports import spstreport
 from .reports import sbstreport
+from .reports import sdtreport
 
 from .ratelimit import RateLimiter
 
