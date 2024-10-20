@@ -284,3 +284,42 @@ def sdtreport(filePath:str):
     sdTargetingDf = sdTargetingDf.astype(schema)
 
     return sdTargetingDf
+
+def spcreport(filePath:str):
+    spCampaignDf = pd.read_csv(filePath)
+    spCampaignDf = spCampaignDf.rename(columns=lambda X:X.replace('7','_7').replace('-','').replace('#','').replace('(','').replace(')','').replace(',','').replace(' ','_').lower())
+
+    colRange = spCampaignDf.columns[7:]
+    spCampaignDf[colRange] = spCampaignDf[colRange].replace({'%':'','\$':'',',':''}, regex=True)
+    spCampaignDf['date'] = pd.to_datetime(spCampaignDf['date'])
+
+    schema = {
+        'date': 'datetime64[ns]',
+        'portfolio_name': str,
+        'campaign_type': str,
+        'campaign_name': str,
+        'country': str,
+        'status': str,
+        'currency': str,
+        'budget': float,
+        'targeting_type': str,
+        'bidding_strategy': str,
+        'impressions': float,
+        'last_year_impressions': float,
+        'clicks': float,
+        'last_year_clicks': float,
+        'clickthru_rate_ctr': float,
+        'spend': float,
+        'last_year_spend': float,
+        'cost_per_click_cpc': float,
+        'last_year_cost_per_click_cpc': float,
+        '_7_day_total_orders_': float,
+        'total_advertising_cost_of_sales_acos_': float,
+        'total_return_on_advertising_spend_roas': float,
+        '_7_day_total_sales_': float
+    }
+
+    spCampaignDf = spCampaignDf.astype(schema)
+
+    return spCampaignDf
+

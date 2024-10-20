@@ -6,6 +6,7 @@ from .reports import promoreport
 from .reports import spstreport
 from .reports import sbstreport
 from .reports import sdtreport
+from .reports import spcreport
 
 from .ratelimit import RateLimiter
 
