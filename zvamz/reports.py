@@ -323,3 +323,72 @@ def spcreport(filePath:str):
 
     return spCampaignDf
 
+def sbcreport(filePath:str):
+    sbCampaignDf = pd.read_excel(filePath)
+    sbCampaignDf = sbCampaignDf.rename(columns=lambda X:X.replace('14','_14').replace('5','_5').replace('-','').replace('#','').replace('(','').replace(')','').replace(',','').replace(' ','_').lower())
+
+    colRange = sbCampaignDf.columns[6:]
+    sbCampaignDf[colRange] = sbCampaignDf[colRange].replace({'%':'','\$':'',',':''}, regex=True)
+    sbCampaignDf['date'] = pd.to_datetime(sbCampaignDf['date'])
+
+    schema = {
+        'date': 'datetime64[ns]',
+        'portfolio_name': str,
+        'currency': str,
+        'campaign_name': str,
+        'cost_type': str,
+        'country': str,
+        'impressions': float,
+        'clicks': float,
+        'clickthru_rate_ctr': float,
+        'cost_per_click_cpc': float,
+        'spend': float,
+        'total_advertising_cost_of_sales_acos_': float,
+        'total_return_on_advertising_spend_roas': float,
+        '_14_day_total_sales_': float,
+        '_14_day_total_orders_': float,
+        '_14_day_total_units_': float,
+        '_14_day_conversion_rate': float,
+        'viewable_impressions': float,
+        'cost_per_1000_viewable_impressions_vcpm': float,
+        'viewthrough_rate_vtr': float,
+        'clickthrough_rate_for_views_vctr': float,
+        'video_first_quartile_views': float,
+        'video_midpoint_views': float,
+        'video_third_quartile_views': float,
+        'video_complete_views': float,
+        'video_unmutes': float,
+        '_5_second_views': float,
+        '_5_second_view_rate': float,
+        '_14_day_branded_searches': float,
+        '_14_day_detail_page_views_dpv': float,
+        '_14_day_newtobrand_orders_': float,
+        '_14_day_%_of_orders_newtobrand': float,
+        '_14_day_newtobrand_sales': float,
+        '_14_day_%_of_sales_newtobrand': float,
+        '_14_day_newtobrand_units_': float,
+        '_14_day_%_of_units_newtobrand': float,
+        '_14_day_newtobrand_order_rate': float,
+        'total_advertising_cost_of_sales_acos__click': float,
+        'total_return_on_advertising_spend_roas__click': float,
+        '_14_day_total_sales__click': float,
+        '_14_day_total_orders___click': float,
+        '_14_day_total_units___click': float,
+        'newtobrand_detail_page_views': float,
+        'newtobrand_detail_page_view_clickthrough_conversions': float,
+        'newtobrand_detail_page_view_rate': float,
+        'effective_cost_per_newtobrand_detail_page_view': float,
+        '_14_day_atc': float,
+        '_14_day_atc_clicks': float,
+        '_14_day_atcr': float,
+        'effective_cost_per_add_to_cart_ecpatc': float,
+        'branded_searches_clickthrough_conversions': float,
+        'branded_searches_rate': float,
+        'effective_cost_per_branded_search': float
+    }
+
+    sbCampaignDf = sbCampaignDf.astype(schema)
+    
+    return sbCampaignDf
+
+    
