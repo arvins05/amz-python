@@ -11,5 +11,6 @@ fc_to_country = {
     'VGT2': 'USA', 'GYR2': 'USA', 'GYR3': 'USA', 'SBD1': 'USA', 'RDU2': 'USA', 'IND9': 'USA', 'DUS2': 'Germany',
     'HAJ1': 'Germany', 'DTM2': 'Germany', 'BHX4': 'UK', 'LBA4': 'UK', 'BHX2': 'UK', 'LCY2': 'UK', 'EDI4': 'UK',
     'LTN1': 'UK', 'HAM2': 'Germany', 'WRO5': 'Poland', 'XDS1': 'Germany', 'EUK5': 'Germany', 'MAN2': 'UK',
-    'MAN3': 'UK', 'BHX1': 'UK', 'LTN2': 'UK', 'BRS1': 'UK', 'EMA1': 'UK', 'LCJ4': 'Poland', 'LCJ3': 'Poland'
+    'MAN3': 'UK', 'BHX1': 'UK', 'LTN2': 'UK', 'BRS1': 'UK', 'EMA1': 'UK', 'LCJ4': 'Poland', 'LCJ3': 'Poland',
+    'RFD2':'USA', 'RMN3':'USA'
 }
