@@ -199,3 +199,41 @@ def shipment_items(marketplace_action, access_token, past_days):
             })
     shipmentItemsDf = pd.DataFrame(df)
     return shipmentItemsDf 
+
+def shipment_summary(marketplace_action, access_token, past_days):
+    """
+    This will pull all shipment and items inside it for specified marketplace.
+    And Summarise the Report
+
+    Parameter:
+    - marketplace_action: the specific marketplace command to pull the data
+    - access_token: matching access token of the marketplace
+    - past_days: number of days from today's date (UTC)
+
+    return:
+    - data frame of the report summary
+    """
+    shipmentDf = shipment_status(marketplace_action, access_token, past_days)
+    shipmentItemsDf = shipment_items(marketplace_action, access_token, past_days)
+
+    shipmentSummaryDf = shipmentDf.merge(shipmentItemsDf, how='inner', on='shipment_id')
+    shipmentSummaryDf.insert(0,'date',datetime.utcnow().strftime('%F'))
+
+    schema = {
+        'date': 'datetime64[ns]',
+        'shipment_id': str,
+        'shipment_name': str,
+        'shipment_status': str,
+        'destination_fulfillment_center': str,
+        'country': str,
+        'sku': str,
+        'fnsku': str,
+        'shipped_qty': float,
+        'received_qty': float,
+        'case_qty': float,
+        'prep_instruction': str,
+        'prep_owner': str
+    }
+    shipmentSummaryDf = shipmentSummaryDf.astype(schema)
+
+    return shipmentSummaryDf

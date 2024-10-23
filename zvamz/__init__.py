@@ -17,3 +17,4 @@ from .marketplaces import marketplaces
 from .api import zv_client_access
 from .api import shipment_status
 from .api import shipment_items
+from .api import shipment_summary
