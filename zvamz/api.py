@@ -2,8 +2,10 @@ import requests
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+import time
 from .ratelimit import RateLimiter
 from .fcmap import fc_to_country
+from .marketplaces import marketplaces
 
 def zv_client_access(username, region):
     """
@@ -142,7 +144,7 @@ def shipment_items(marketplace_action, access_token, past_days):
         'LastUpdatedBefore': LastUpdatedBefore,
         'QueryType': 'DATE_RANGE'
     }
-    response = requests.get(url, headers=headers, params=request_params)
+    
     try:
         response = requests.get(url, headers=headers, params=request_params)
         records.extend(response.json()['payload']['ItemData'])
@@ -237,3 +239,91 @@ def shipment_summary(marketplace_action, access_token, past_days):
     shipmentSummaryDf = shipmentSummaryDf.astype(schema)
 
     return shipmentSummaryDf
+
+def narf_eligibility(access_token, file_path_name):
+    # Create Report
+    regionUrl, marketplace_id = marketplaces.US()
+    endpoint = f'/reports/2021-06-30/reports'
+    url = regionUrl + endpoint
+    headers = {
+        'x-amz-access-token': access_token,
+        'Content-Type': 'application/json'
+    }
+
+    request_params = {
+        'marketplaceIds': [marketplace_id],
+        'reportType': 'GET_REMOTE_FULFILLMENT_ELIGIBILITY'
+    }
+
+    create_response = requests.post(url, headers=headers, json=request_params,)
+    report_id = create_response.json()['reportId']
+
+    # Check Report Status
+    endpoint = f'/reports/2021-06-30/reports/{report_id}'
+    url = regionUrl + endpoint
+
+    while True:
+        status_response = requests.get(url, headers=headers)
+        status = status_response.json().get("processingStatus")
+        
+        if status == "DONE":
+            print("Report is ready for download!")
+            document_id = status_response.json()["reportDocumentId"]
+            break
+        elif status == "CANCELLED":
+            print("Report creation was cancelled.")
+            exit()
+        elif status == "FAILED":
+            print("Report creation failed.")
+            exit()
+        else:
+            print(f"Report status: {status}. Waiting for report to be ready...")
+            time.sleep(60)  # Wait before checking again
+
+    # Download Report
+    endpoint = f'/reports/2021-06-30/documents/{document_id}'
+    url = regionUrl + endpoint
+    document_response = requests.get(url, headers=headers)
+
+    if document_response.status_code == 200:
+        download_url = document_response.json()["url"]
+        report_data = requests.get(download_url)
+
+        with open(file_path_name, "wb") as f:
+            f.write(report_data.content)
+    else:
+        print("Failed to get the report document:", document_response.json())
+
+    #prepare DF
+    narfDf = pd.read_excel(file_path_name,sheet_name='Enrollment',skiprows=3)
+    narfDf = narfDf.rename(columns=lambda x:x.replace('.1','').replace('.2','').replace('(Yes/No)','')
+                                    .replace(' Brazil ','').replace(' Canada ','').replace(' Mexico ','')
+                                    .replace('/','_').replace(' ','_')
+                                    .lower())
+
+    brNarfDf = narfDf.iloc[:,:6]
+    brNarfDf.insert(0,'marketplace','Brazil')
+
+    caNarfDf = pd.concat([narfDf.iloc[:,:3],narfDf.iloc[:,6:9]], axis = 1)
+    caNarfDf.insert(0,'marketplace','Canada')
+
+    mxNarfDf = pd.concat([narfDf.iloc[:,:3],narfDf.iloc[:,9:12]], axis = 1)
+    mxNarfDf.insert(0,'marketplace','Mexico')
+
+    narfFinalDf = pd.concat([brNarfDf,caNarfDf,mxNarfDf], axis=0, ignore_index=True)
+    narfFinalDf.insert(0,'date',datetime.utcnow().strftime('%F'))
+
+    schema = {
+        'date': 'datetime64[ns]',
+    'marketplace': str,
+    'merchant_sku': str,
+    'asin': str,
+    'product_name': str,
+    'offer_status': str,
+    'more_details': str,
+    'enable_disable': str
+    }
+
+    narfFinalDf = narfFinalDf.astype(schema)
+
+    return narfFinalDf
